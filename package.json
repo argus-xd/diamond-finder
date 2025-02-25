@@ -1,0 +1,33 @@
+{
+  "name": "diamond-finder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:backend": "yarn workspace backend build",
+    "start:migration:generate": "yarn typeorm migration:generate -d ./apps/backend/dist/data-source.js ./apps/backend/src/migrations/Name",
+    "start:migration:run": "yarn typeorm migration:run -d ./apps/backend/dist/data-source.js",
+
+    "lint": "yarn run lint:eslint && yarn run lint:markdown && yarn run lint:prettier",
+    "lint:eslint": "eslint --ignore-path ./.gitignore --max-warnings 0 --ext .ts,.js .",
+    "lint:eslint:fix": "eslint --ignore-path ./.gitignore --fix --ext .ts,.js .",
+    "lint:fix": "yarn run lint:eslint:fix && yarn run lint:markdown:fix && yarn run lint:prettier:fix",
+    "lint:prettier": "prettier --ignore-path ./.gitignore --check \"./**/*.{ts,js,json,yaml,yml,md}\"",
+    "lint:prettier:fix": "prettier --ignore-path ./.gitignore --write \"./**/*.{ts,js,json,yaml,yml,md}\""
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "eslint": "8.30.0"
+  },
+  "dependencies": {
+    "yarn": "^1.22.22"
+  }
+}
