@@ -36,7 +36,7 @@ docker run --name postgres-game \
 # Сборка бэкенда
 `yarn run build:backend`
 
-### Генерация миграций
+### Генерация миграций - Не обязательный шаг, файл уже есть
  `yarn run start:migration:generate`
 
 Эта команда сгенерирует миграции, если они еще не были созданы.
