@@ -23,6 +23,26 @@
         </div>
       </div>
 
+      <div v-if="boardInstance.status === GAME_STATUS.WAITING" class="invite-section">
+        <div class="invite-container">
+          <div class="invite-text">
+            Ссылка для второго игрока:
+          </div>
+          <div class="invite-row">
+            <div class="invite-link">
+              {{ fullGameUrl }}
+            </div>
+            <button
+              class="copy-button"
+              @click="copyToClipboard"
+              :class="{ 'copied': isCopied }"
+            >
+              {{ isCopied ? '✓ Скопировано' : 'Копировать' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="game-result" v-if="boardInstance.status === GAME_STATUS.FINISHED">
         <div class="result-message" :class="isWinner ? 'winner' : 'loser'">
           <span class="result-icon">{{ isWinner ? '🏆' : '💔' }}</span>
@@ -67,6 +87,7 @@ export default {
     return {
       board: [],
       boardInstance: {},
+      isCopied: false
     };
   },
   computed: {
@@ -76,6 +97,9 @@ export default {
     isWinner() {
       return this.boardInstance.winnerToken === this.boardInstance.token;
     },
+    fullGameUrl() {
+      return window.location.origin + this.$route.fullPath;
+    }
   },
   methods: {
     getStatusText(status) {
@@ -111,6 +135,19 @@ export default {
       );
       this.board = [];
     },
+    copyToClipboard() {
+      const textarea = document.createElement('textarea');
+      textarea.value = this.fullGameUrl;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      this.isCopied = true;
+      setTimeout(() => {
+        this.isCopied = false;
+      }, 2000);
+    }
   },
   mounted() {
     this.initializeBoard();
@@ -295,4 +332,61 @@ export default {
     transform: translateY(0);
   }
 }
+
+.invite-section {
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.invite-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invite-text {
+  color: #666;
+  font-size: 14px;
+}
+
+.invite-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.invite-link {
+  flex: 1;
+  padding: 10px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #666;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.copy-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #2196f3;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.copy-button:hover {
+  background: #1976d2;
+}
+
+.copy-button.copied {
+  background: #4caf50;
+}
+ 
 </style>
