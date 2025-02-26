@@ -3,9 +3,6 @@
   <p>
     <strong>Current route path:</strong> {{ $route.fullPath }}
   </p>
-  <nav>
-    <RouterLink to="/"> Начать новую игру </RouterLink> <br><br>
-  </nav>
   <main>
     <RouterView />
   </main>
