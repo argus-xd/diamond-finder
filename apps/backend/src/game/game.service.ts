@@ -13,8 +13,7 @@ export class GameService {
     private readonly gameSessionRepository: Repository<GameSession>,
     @InjectRepository(GameMove)
     private readonly gameMoveRepository: Repository<GameMove>,
-  ) {
-  }
+  ) {}
 
   // Создание новой игровой сессии для первого игрока
   async createGameSession(rows: number, cols: number, diamonds: number): Promise<{ id: number, token: string }> {
@@ -65,7 +64,6 @@ export class GameService {
     if (![gameSession.playerOneToken, gameSession.playerTwoToken].includes(token)) {
       throw new UnauthorizedException('Invalid player token');
     }
-
 
     // Проверяем, чей сейчас ход
     const isPlayerOne = gameSession.playerOneToken === token;

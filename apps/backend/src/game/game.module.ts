@@ -10,10 +10,11 @@ import { GameGateway } from './game.gateway';
   imports: [
     TypeOrmModule.forFeature([
       GameSession,
-      GameMove
+      GameMove,
     ]),
   ],
   controllers: [GameController],
   providers: [GameService, GameGateway],
 })
-export class GameModule {}
+export class GameModule {
+}

@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:backend": "yarn workspace backend build",
+    "start:backend": "yarn workspace backend start:dev",
+    "start:frontend": "yarn workspace frontend serve",
     "start:migration:generate": "yarn typeorm migration:generate -d ./apps/backend/dist/data-source.js ./apps/backend/src/migrations/Name",
     "start:migration:run": "yarn typeorm migration:run -d ./apps/backend/dist/data-source.js",
-
     "lint": "yarn run lint:eslint && yarn run lint:markdown && yarn run lint:prettier",
     "lint:eslint": "eslint --ignore-path ./.gitignore --max-warnings 0 --ext .ts,.js .",
     "lint:eslint:fix": "eslint --ignore-path ./.gitignore --fix --ext .ts,.js .",

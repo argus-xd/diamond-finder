@@ -42,7 +42,7 @@ export default {
       if (!token) {
         // Попытка получить токен
         this.socket.tryJoinGame(sessionId);
-        return; // Выходим из метода, если токен не получен
+        return;
       }
 
       this.boardInstance = new Board({rows: this.rows, cols: this.cols, token, sessionId}, () => {
@@ -61,12 +61,11 @@ export default {
 <style scoped>
 
 .game-board {
-  background: darkgrey;
-  height: 500px;
+  //background: darkgrey;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  //align-items: center;
+  align-items: center;
 }
 
 .row {

@@ -3,22 +3,9 @@ import Cell from '@/entity/Cell';
 
 const socket = io(process.env.VUE_APP_GAME_SERVICE_HOST); // URL вашего сервера
 
-// // Завершение игры
-// socket.emit('finishGame', { sessionId, token });
-
-
-// Обработка завершения игры
-socket.on('gameFinished', (gameSession) => {
-
-  console.error('gameFinished:', gameSession);
-  // Отображение результатов игры
-});
-
-// Обработка ошибок
 socket.on('error', (message) => {
   console.error('Error:', message);
 });
-
 
 socket.on('debug', (message) => {
   console.warn('debug:', message);
@@ -33,26 +20,17 @@ export default class Board {
     this.sessionId = sessionId;
     this.token = token;
     this.winnerToken = '';
-    this.diamondTiles = [];
-    this.tiles = [
-      [{}, {}, {}],
-      [{}, {}, {}],
-    ];
+    this.tiles = [];
     this.status = '';
     this.isPlayerOneTurn = '';
-
-    // this.initializeDiamondCell();
-    // this.openBoard();
 
     // Обработка обновлений состояния игры
     socket.on('gameUpdated', (boardWithMoves) => {
 
-      console.log('gameUpdated start');
       console.log(boardWithMoves);
-      console.log('gameUpdated end');
       this.updateBoard(boardWithMoves);
 
-      callBackForceUpdate(boardWithMoves); // КОСТЫЛЬ удалить gameSession
+      callBackForceUpdate(); // КОСТЫЛЬ для обновления компонента
     });
 
     // Присоединение к игре
@@ -66,7 +44,6 @@ export default class Board {
     this.winnerToken = boardWithMoves.winnerToken;
     this.isPlayerOneTurn = boardWithMoves.isPlayerOneTurn;
 
-    // this.tiles = gameSession.boardState;
     const tiles =  Array.from({ length: this.rows }, (_, x) =>
       Array.from({ length: this.cols }, (_, y) => new Cell(this, x, y)),
     );
@@ -76,18 +53,6 @@ export default class Board {
     }
 
     this.tiles = tiles;
-
-    // this.initializeDiamondCell();
-    // this.openBoard();
-    console.log(this);
-  }
-
-  getTile(x, y) {
-    try {
-      return this.tiles[x][y];
-    } catch {
-      return null;
-    }
   }
 
   openTile(x, y) {
@@ -103,7 +68,6 @@ export default class Board {
       return
     }
 
-    console.log(x, y);
     socket.emit('makeMove', move);
   }
 

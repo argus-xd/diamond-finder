@@ -40,7 +40,7 @@ export class GameGateway {
       winnerToken: gameSessionAfterMovies.winnerToken,
       status: gameSessionAfterMovies.status,
       isPlayerOneTurn: gameSessionAfterMovies.isPlayerOneTurn,
-    }
+    };
 
     // const finished = await this.gameService.finishGame(sessionId, token);
 
@@ -68,12 +68,11 @@ export class GameGateway {
       status: gameSession.status,
       winnerToken: gameSession.winnerToken,
       isPlayerOneTurn: gameSession.isPlayerOneTurn,
-    }
+    };
 
     console.log('SubscribeMessage joinGame', sessionId.toString());
     // Отправка обновленного состояния игры обоим игрокам
     this.server.to(gameSession.id.toString()).emit('gameUpdated', boardWithMoves);
-
   }
 
   @SubscribeMessage('tryJoinGame')
@@ -81,9 +80,7 @@ export class GameGateway {
     @MessageBody() sessionId: number,
     @ConnectedSocket() client: Socket,
   ) {
-
     const gameSession = await this.gameService.joinGameSession(sessionId);
-
     client.emit('tryJoinGame', { sessionId, token: gameSession.playerTwoToken });
   }
 
