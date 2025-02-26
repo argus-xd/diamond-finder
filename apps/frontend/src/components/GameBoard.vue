@@ -388,5 +388,4 @@ export default {
 .copy-button.copied {
   background: #4caf50;
 }
- 
 </style>
