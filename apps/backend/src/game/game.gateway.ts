@@ -66,7 +66,6 @@ export class GameGateway {
       isPlayerOneTurn: gameSession.isPlayerOneTurn,
     };
 
-    console.log('SubscribeMessage joinGame', sessionId.toString());
     // Отправка обновленного состояния игры обоим игрокам
     this.server.to(gameSession.id.toString()).emit('gameUpdated', boardWithMoves);
   }
