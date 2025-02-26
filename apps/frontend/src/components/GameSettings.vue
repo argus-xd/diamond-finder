@@ -2,16 +2,16 @@
   <div class="settings">
     <div class="settings-card">
       <h2>Настройки игры</h2>
-      
+
       <div class="setting-group">
         <label>
           Ширина поля: {{ width }}
-          <input 
-            type="range" 
-            v-model.number="width" 
-            :min="BOARD_LIMITS.MIN_SIZE" 
-            :max="BOARD_LIMITS.MAX_SIZE" 
-            step="1" 
+          <input
+            type="range"
+            v-model.number="width"
+            :min="BOARD_LIMITS.MIN_SIZE"
+            :max="BOARD_LIMITS.MAX_SIZE"
+            step="1"
           />
         </label>
       </div>
@@ -19,12 +19,12 @@
       <div class="setting-group">
         <label>
           Высота поля: {{ height }}
-          <input 
-            type="range" 
-            v-model.number="height" 
-            :min="BOARD_LIMITS.MIN_SIZE" 
-            :max="BOARD_LIMITS.MAX_SIZE" 
-            step="1" 
+          <input
+            type="range"
+            v-model.number="height"
+            :min="BOARD_LIMITS.MIN_SIZE"
+            :max="BOARD_LIMITS.MAX_SIZE"
+            step="1"
           />
         </label>
       </div>
@@ -32,20 +32,20 @@
       <div class="setting-group">
         <label>
           Кристаллы: {{ diamonds }}
-          <input 
-            type="range" 
-            v-model.number="diamonds" 
-            :min="DIAMOND_LIMITS.MIN" 
-            :max="DIAMOND_LIMITS.MAX" 
-            step="1" 
+          <input
+            type="range"
+            v-model.number="diamonds"
+            :min="DIAMOND_LIMITS.MIN"
+            :max="DIAMOND_LIMITS.MAX"
+            step="1"
           />
         </label>
       </div>
 
       <div v-if="error" class="error">{{ error }}</div>
 
-      <button 
-        @click="startGame" 
+      <button
+        @click="startGame"
         :disabled="isLoading"
       >
         {{ isLoading ? 'Создание...' : 'Начать игру' }}
@@ -55,7 +55,8 @@
 </template>
 
 <script>
-import GameService from '@/GameService';
+
+import GameService from '@/services/GameService';
 
 const BOARD_LIMITS = {
   MIN_SIZE: 3,
@@ -83,11 +84,11 @@ export default {
     async startGame() {
       this.error = null;
       this.isLoading = true;
-      
+
       try {
         const gameSession = await GameService.createGameSession(
-          this.width, 
-          this.height, 
+          this.width,
+          this.height,
           this.diamonds
         );
         localStorage.setItem(`gameSession${gameSession.id}`, gameSession.token);

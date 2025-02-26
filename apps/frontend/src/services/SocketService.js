@@ -1,15 +1,15 @@
 import io from 'socket.io-client';
 
-class SocketManager {
+class SocketService {
   constructor() {
-    if (SocketManager.instance) {
-      return SocketManager.instance;
+    if (SocketService.instance) {
+      return SocketService.instance;
     }
 
     this.socket = io(process.env.VUE_APP_GAME_SERVICE_HOST);
     this.setupDefaultListeners();
 
-    SocketManager.instance = this;
+    SocketService.instance = this;
     return this;
   }
 
@@ -49,4 +49,4 @@ class SocketManager {
   }
 }
 
-export default new SocketManager();
+export default new SocketService();

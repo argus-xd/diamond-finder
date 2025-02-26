@@ -74,10 +74,10 @@
 </template>
 
 <script>
-import CellEntity from './ItemCell.vue';
-import Board from '@/entity/Board';
-import socketManager from '@/socket/SocketManager';
-import { GAME_STATUS } from '@/constants/gameStatus';
+import CellEntity from './GameCell.vue';
+import Board from '@/models/Board';
+import { GAME_STATUS } from '@/constants/GameStatus';
+import socketService from '@/services/SocketService';
 
 export default {
   components: {
@@ -118,8 +118,8 @@ export default {
       const token = localStorage.getItem(`gameSession${sessionId}`);
 
       if (!token) {
-        socketManager.tryJoinGame(sessionId);
-        socketManager.onTryJoinGame(({ sessionId, token }) => {
+        socketService.tryJoinGame(sessionId);
+        socketService.onTryJoinGame(({ sessionId, token }) => {
           localStorage.setItem(`gameSession${sessionId}`, token);
           this.createBoardInstance(sessionId, token);
         });
@@ -153,7 +153,7 @@ export default {
     this.initializeBoard();
   },
   beforeUnmount() {
-    socketManager.clearListeners();
+    socketService.clearListeners();
   },
 };
 </script>

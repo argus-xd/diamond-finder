@@ -1,5 +1,6 @@
-import Cell from '@/entity/Cell';
-import socketManager from '@/socket/SocketManager';
+
+import Cell from '@/models/Cell';
+import socketService from '@/services/SocketService';
 
 export default class Board {
   constructor(data, callBackForceUpdate) {
@@ -15,14 +16,14 @@ export default class Board {
     this.isPlayerOneTurn = '';
 
     // Обработка обновлений состояния игры
-    socketManager.onGameUpdate((boardWithMoves) => {
+    socketService.onGameUpdate((boardWithMoves) => {
       console.log(boardWithMoves);
       this.updateBoard(boardWithMoves);
       callBackForceUpdate(); // КОСТЫЛЬ для обновления компонента
     });
 
     // Присоединение к игре
-    socketManager.joinGame(sessionId, token);
+    socketService.joinGame(sessionId, token);
   }
 
   updateBoard(boardWithMoves) {
@@ -53,10 +54,10 @@ export default class Board {
 
     if(this.tiles[x][y].open){
       console.log(x, y, 'is opened');
-      return
+      return;
     }
 
-    socketManager.makeMove(move);
+    socketService.makeMove(move);
   }
 
 }
