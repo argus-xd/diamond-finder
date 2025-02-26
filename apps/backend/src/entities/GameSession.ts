@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export enum GameStatus {
-  WAITING = 'waiting', // Ожидание второго игрока
-  IN_PROGRESS = 'in_progress', // Игра идёт
-  FINISHED = 'finished' // Игра завершена
+  WAITING = 'waiting',
+  IN_PROGRESS = 'in_progress',
+  FINISHED = 'finished'
 }
 
 @Entity()
@@ -30,10 +30,10 @@ export class GameSession {
   isPlayerOneTurn: boolean; // true, если ход первого игрока, иначе false
 
   @Column({ type: 'enum', enum: GameStatus, default: GameStatus.WAITING })
-  status: GameStatus; // Статус сессии
+  status: GameStatus;
 
   @Column({ nullable: true })
-  winnerToken?: string; // Кто победил (null, если игра не завершена)
+  winnerToken?: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

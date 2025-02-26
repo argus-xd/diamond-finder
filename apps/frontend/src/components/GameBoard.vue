@@ -5,7 +5,7 @@
         <div class="status-badge" :class="boardInstance.status">
           {{ getStatusText(boardInstance.status) }}
         </div>
-        <div class="player-turn" v-if="boardInstance.status === 'in_progress'">
+        <div class="player-turn" v-if="boardInstance.status === GAME_STATUS.IN_PROGRESS">
           <div class="player-indicator" :class="{'active': boardInstance.isPlayerOneTurn}">
             <span class="player-icon">👤</span>
             <span class="player-text">
@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <div class="game-result" v-if="boardInstance.status === 'finished'">
+      <div class="game-result" v-if="boardInstance.status === GAME_STATUS.FINISHED">
         <div class="result-message" :class="isWinner ? 'winner' : 'loser'">
           <span class="result-icon">{{ isWinner ? '🏆' : '💔' }}</span>
           <h2>{{ isWinner ? 'Поздравляем!' : 'В следующий раз повезёт!' }}</h2>
@@ -57,6 +57,7 @@
 import CellEntity from './ItemCell.vue';
 import Board from '@/entity/Board';
 import socketManager from '@/socket/SocketManager';
+import { GAME_STATUS } from '@/constants/gameStatus';
 
 export default {
   components: {
@@ -69,6 +70,9 @@ export default {
     };
   },
   computed: {
+    GAME_STATUS() {
+      return GAME_STATUS
+    },
     isWinner() {
       return this.boardInstance.winnerToken === this.boardInstance.token;
     },
@@ -76,9 +80,9 @@ export default {
   methods: {
     getStatusText(status) {
       const statusMap = {
-        'waiting': 'Ожидание второго игрока',
-        'in_progress': 'Игра идёт',
-        'finished': 'Игра окончена',
+        [GAME_STATUS.WAITING]: 'Ожидание второго игрока',
+        [GAME_STATUS.IN_PROGRESS]: 'Игра идёт',
+        [GAME_STATUS.FINISHED]: 'Игра окончена'
       };
       return statusMap[status] || status;
     },
