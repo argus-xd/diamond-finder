@@ -12,7 +12,7 @@ export class CreateGameDto {
   cols: number;
 
   @IsNumber()
-  @Min(1)
+  @Min(3)
   @Max(15)
   diamonds: number;
 }

@@ -14,7 +14,7 @@
 <script>
 import CellEntity from './ItemCell.vue';
 import Board from '@/entity/Board';
-import SocketService from '@/socket/Socket';
+import socketManager from '@/socket/SocketManager';
 
 export default {
   components: {
@@ -24,7 +24,6 @@ export default {
     return {
       board: [],
       boardInstance: {},
-      socket: new SocketService(this.initializeBoard),
     };
   },
   methods: {
@@ -36,21 +35,34 @@ export default {
 
       const sessionId = this.$route.params.sessionId;
       const token = localStorage.getItem(`gameSession${sessionId}`);
+
       if (!token) {
-        // Попытка получить токен
-        this.socket.tryJoinGame(sessionId);
+        socketManager.tryJoinGame(sessionId);
+
+        socketManager.onTryJoinGame(({sessionId, token}) => {
+          localStorage.setItem(`gameSession${sessionId}`, token);
+          console.log('tryJoinGame: SUCCESS', token);
+          this.createBoardInstance(sessionId, token);
+        });
         return;
       }
 
-      this.boardInstance = new Board({rows: this.rows, cols: this.cols, token, sessionId}, () => {
-        this.$forceUpdate(); // Принудительное обновление компонента
-      });
-      this.board = [];
+      this.createBoardInstance(sessionId, token);
     },
+    createBoardInstance(sessionId, token) {
+      this.boardInstance = new Board(
+        { rows: this.rows, cols: this.cols, token, sessionId },
+        () => this.$forceUpdate()
+      );
+      this.board = [];
+    }
   },
   mounted() {
     this.initializeBoard();
   },
+  beforeUnmount() {
+    socketManager.clearListeners();
+  }
 
 };
 </script>

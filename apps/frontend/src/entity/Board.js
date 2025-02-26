@@ -1,15 +1,5 @@
-import io from 'socket.io-client';
 import Cell from '@/entity/Cell';
-
-const socket = io(process.env.VUE_APP_GAME_SERVICE_HOST);
-
-socket.on('error', (message) => {
-  console.error('Error:', message);
-});
-
-socket.on('debug', (message) => {
-  console.warn('debug:', message);
-});
+import socketManager from '@/socket/SocketManager';
 
 export default class Board {
   constructor(data, callBackForceUpdate) {
@@ -25,16 +15,14 @@ export default class Board {
     this.isPlayerOneTurn = '';
 
     // Обработка обновлений состояния игры
-    socket.on('gameUpdated', (boardWithMoves) => {
-
+    socketManager.onGameUpdate((boardWithMoves) => {
       console.log(boardWithMoves);
       this.updateBoard(boardWithMoves);
-
       callBackForceUpdate(); // КОСТЫЛЬ для обновления компонента
     });
 
     // Присоединение к игре
-    socket.emit('joinGame', { sessionId: sessionId, token: token });
+    socketManager.joinGame(sessionId, token);
   }
 
   updateBoard(boardWithMoves) {
@@ -68,7 +56,7 @@ export default class Board {
       return
     }
 
-    socket.emit('makeMove', move);
+    socketManager.makeMove(move);
   }
 
 }
