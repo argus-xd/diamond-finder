@@ -11,7 +11,7 @@ export class GameMove {
   session: GameSession;
 
   @Column()
-  playerToken: string;  // Какой игрок сделал ход
+  playerToken: string;
 
   @Column()
   row: number;
@@ -20,7 +20,7 @@ export class GameMove {
   col: number;
 
   @Column({ default: false })
-  isDiamond: boolean;  // Нашёл ли алмаз
+  isDiamond: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

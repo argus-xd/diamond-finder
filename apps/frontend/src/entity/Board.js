@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import Cell from '@/entity/Cell';
 
-const socket = io(process.env.VUE_APP_GAME_SERVICE_HOST); // URL вашего сервера
+const socket = io(process.env.VUE_APP_GAME_SERVICE_HOST);
 
 socket.on('error', (message) => {
   console.error('Error:', message);

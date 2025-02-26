@@ -25,7 +25,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
-    GameModule, // Добавляем GameModule
+    GameModule,
   ],
   controllers: [],
   providers: [],

@@ -34,10 +34,7 @@ export default {
     initializeBoard() {
       console.log('Размер поля:', this.rows, 'x', this.cols);
 
-      // Получаем sessionId из параметров маршрута
       const sessionId = this.$route.params.sessionId;
-
-      // Получаем токен из localStorage
       const token = localStorage.getItem(`gameSession${sessionId}`);
       if (!token) {
         // Попытка получить токен

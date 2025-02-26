@@ -65,13 +65,10 @@ export class GameService {
       throw new UnauthorizedException('Invalid player token');
     }
 
-    // Проверяем, чей сейчас ход
     const isPlayerOne = gameSession.playerOneToken === token;
     if (gameSession.isPlayerOneTurn !== isPlayerOne) {
       throw new Error('Not your turn!');
     }
-
-    // Логика выполнения хода...
 
     const tile = gameSession.boardState[x][y];
     const isDiamond = !!tile['diamond'];
@@ -115,7 +112,6 @@ export class GameService {
         }
       });
 
-      // Получаем токены двух игроков
       const playerTokens = Object.keys(crystalCounts);
 
       const winnerToken = crystalCounts[playerTokens[0]] > crystalCounts[playerTokens[1]]

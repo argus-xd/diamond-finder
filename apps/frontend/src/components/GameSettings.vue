@@ -34,11 +34,9 @@ export default {
         const gameSession = await GameService.createGameSession(this.width, this.height, this.diamonds);
         console.log('Game session created:', gameSession);
 
-        // Сохранение токена в localStorage
         localStorage.setItem(`gameSession${gameSession.id}`, gameSession.token);
 
-        // Перенаправление на страницу игры
-        this.$router.push(`/game/${gameSession.id}`);
+        this.$router.push(`/game/${gameSession.id}`); // Перенаправление на страницу игры
       } catch (error) {
         console.error('Error creating game session:', error);
       }

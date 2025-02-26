@@ -22,7 +22,7 @@ docker run --name postgres-game \
 ## **Установка зависимостей**
 
 ### Если у вас нету Yarn, установите его:
-. Установите Yarn глобально:
+Установите Yarn глобально:
 
   `npm install --global yarn`
 

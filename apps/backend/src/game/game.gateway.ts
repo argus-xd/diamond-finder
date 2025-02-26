@@ -42,13 +42,9 @@ export class GameGateway {
       isPlayerOneTurn: gameSessionAfterMovies.isPlayerOneTurn,
     };
 
-    // const finished = await this.gameService.finishGame(sessionId, token);
-
     // Отправка обновленного состояния игры обоим игрокам
-    this.server.to(sessionId.toString()).emit('gameUpdated', boardWithMoves); // boardUpdated ?
-
+    this.server.to(sessionId.toString()).emit('gameUpdated', boardWithMoves);
     this.server.to(sessionId.toString()).emit('debug', 'debug gameUpdated makeMove ' + `${sessionId}`);
-    // this.server.to(sessionId).emit('gameUpdated','gameUpdated makeMove '+ sessionId  );
   }
 
   @SubscribeMessage('joinGame')
