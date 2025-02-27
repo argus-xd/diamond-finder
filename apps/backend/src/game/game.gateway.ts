@@ -1,10 +1,4 @@
-import {
-  WebSocketGateway,
-  SubscribeMessage,
-  MessageBody,
-  ConnectedSocket,
-  WebSocketServer,
-} from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
 import { Logger } from '@nestjs/common';
@@ -15,8 +9,7 @@ export class GameGateway {
   server: Server;
   private readonly logger = new Logger(GameGateway.name);
 
-  constructor(
-    private readonly gameService: GameService) {
+  constructor(private readonly gameService: GameService) {
   }
 
   @SubscribeMessage('makeMove')
@@ -46,12 +39,9 @@ export class GameGateway {
     this.server.to(sessionId.toString()).emit('gameUpdated', boardWithMoves);
     this.server.to(sessionId.toString()).emit('debug', 'debug gameUpdated makeMove ' + `${sessionId}`);
   }
-
+ 
   @SubscribeMessage('joinGame')
-  async handleJoinGame(
-    @MessageBody() data: { sessionId: number; token: any },
-    @ConnectedSocket() client: Socket,
-  ) {
+  async handleJoinGame(@MessageBody() data: { sessionId: number; token: any }, @ConnectedSocket() client: Socket) {
     const { sessionId, token } = data;
     const gameSession = await this.gameService.getGameSession(sessionId, token);
 
@@ -71,12 +61,8 @@ export class GameGateway {
   }
 
   @SubscribeMessage('tryJoinGame')
-  async handleTryJoinGame(
-    @MessageBody() sessionId: number,
-    @ConnectedSocket() client: Socket,
-  ) {
+  async handleTryJoinGame(@MessageBody() sessionId: number, @ConnectedSocket() client: Socket) {
     const gameSession = await this.gameService.joinGameSession(sessionId);
     client.emit('tryJoinGame', { sessionId, token: gameSession.playerTwoToken });
   }
-
 }

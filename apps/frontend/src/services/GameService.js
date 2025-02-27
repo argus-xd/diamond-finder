@@ -10,7 +10,7 @@ class GameService {
       const response = await axios.post(`${this.API_URL}/create`, {
         rows,
         cols,
-        diamonds
+        diamonds,
       });
       return response.data;
     } catch (error) {
@@ -18,7 +18,6 @@ class GameService {
       throw error;
     }
   }
-
 }
 
 export default new GameService();

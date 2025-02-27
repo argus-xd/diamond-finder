@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 export enum GameStatus {
   WAITING = 'waiting',
   IN_PROGRESS = 'in_progress',
-  FINISHED = 'finished'
+  FINISHED = 'finished',
 }
 
 @Entity()

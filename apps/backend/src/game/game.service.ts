@@ -16,7 +16,7 @@ export class GameService {
   ) {}
 
   // Создание новой игровой сессии для первого игрока
-  async createGameSession(rows: number, cols: number, diamonds: number): Promise<{ id: number, token: string }> {
+  async createGameSession(rows: number, cols: number, diamonds: number): Promise<{ id: number; token: string }> {
     const board = new Board(rows, cols, diamonds);
     const boardState = board.normalizeBoard();
     const gameSession = this.gameSessionRepository.create({
@@ -51,15 +51,15 @@ export class GameService {
   async getGameSession(sessionId: number, token: string): Promise<GameSession> {
     const gameSession = await this.gameSessionRepository.findOne({ where: { id: sessionId } });
     if (!gameSession) throw new NotFoundException('Game session not found');
-    if (gameSession.playerOneToken !== token && gameSession.playerTwoToken !== token) throw new UnauthorizedException('Invalid player token');
+    if (gameSession.playerOneToken !== token && gameSession.playerTwoToken !== token)
+      throw new UnauthorizedException('Invalid player token');
 
     return gameSession;
   }
 
   async makeMove(sessionId: number, token: string, x: number, y: number): Promise<GameSession> {
     const gameSession = await this.getGameSession(sessionId, token);
-    if (gameSession.status !== GameStatus.IN_PROGRESS)
-      return gameSession;
+    if (gameSession.status !== GameStatus.IN_PROGRESS) return gameSession;
 
     if (![gameSession.playerOneToken, gameSession.playerTwoToken].includes(token)) {
       throw new UnauthorizedException('Invalid player token');
@@ -103,7 +103,7 @@ export class GameService {
       const crystalCounts: { [token: string]: number } = {};
 
       // Подсчет кристаллов для каждого игрока
-      moves.forEach(move => {
+      moves.forEach((move) => {
         if (move.isDiamond) {
           if (!crystalCounts[move.playerToken]) {
             crystalCounts[move.playerToken] = 0;
@@ -114,9 +114,8 @@ export class GameService {
 
       const playerTokens = Object.keys(crystalCounts);
 
-      const winnerToken = crystalCounts[playerTokens[0]] > crystalCounts[playerTokens[1]]
-        ? playerTokens[0]
-        : playerTokens[1];
+      const winnerToken =
+        crystalCounts[playerTokens[0]] > crystalCounts[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
 
       gameSession.status = GameStatus.FINISHED;
       gameSession.winnerToken = winnerToken;
@@ -142,6 +141,4 @@ export class GameService {
     }
     return result;
   }
-
-
 }

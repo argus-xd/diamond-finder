@@ -20,7 +20,6 @@
   "workspaces": [
     "apps/*"
   ],
-
   "keywords": [],
   "author": "",
   "license": "ISC",

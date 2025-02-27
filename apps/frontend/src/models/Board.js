@@ -1,4 +1,3 @@
-
 import Cell from '@/models/Cell';
 import socketService from '@/services/SocketService';
 
@@ -33,7 +32,7 @@ export default class Board {
     this.winnerToken = boardWithMoves.winnerToken;
     this.isPlayerOneTurn = boardWithMoves.isPlayerOneTurn;
 
-    const tiles =  Array.from({ length: this.rows }, (_, x) =>
+    const tiles = Array.from({ length: this.rows }, (_, x) =>
       Array.from({ length: this.cols }, (_, y) => new Cell(this, x, y)),
     );
 
@@ -52,12 +51,11 @@ export default class Board {
       y,
     };
 
-    if(this.tiles[x][y].open){
+    if (this.tiles[x][y].open) {
       console.log(x, y, 'is opened');
       return;
     }
 
     socketService.makeMove(move);
   }
-
 }

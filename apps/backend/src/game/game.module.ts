@@ -7,14 +7,8 @@ import { GameMove } from '../entities/GameMove';
 import { GameGateway } from './game.gateway';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      GameSession,
-      GameMove,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([GameSession, GameMove])],
   controllers: [GameController],
   providers: [GameService, GameGateway],
 })
-export class GameModule {
-}
+export class GameModule {}

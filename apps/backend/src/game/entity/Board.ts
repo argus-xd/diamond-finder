@@ -15,18 +15,18 @@ export default class Board {
   }
 
   createBoard() {
-    const tiles =  Array.from({ length: this.rows }, (_, x) =>
+    const tiles = Array.from({ length: this.rows }, (_, x) =>
       Array.from({ length: this.cols }, (_, y) => new MissCell(this, x, y)),
     );
 
-    return this.initializeDiamondCell(tiles)
+    return this.initializeDiamondCell(tiles);
   }
 
   initializeDiamondCell(tiles) {
     const totalDiamonds = this.diamondsCount;
     const actualDiamonds = totalDiamonds % 2 === 0 ? totalDiamonds - 1 : totalDiamonds;
 
-    const allPositions = [{ rowIndex: 0, colIndex: 0}];
+    const allPositions = [{ rowIndex: 0, colIndex: 0 }];
     for (let rowIndex = 0; rowIndex < this.rows; rowIndex++) {
       for (let colIndex = 0; colIndex < this.cols; colIndex++) {
         allPositions.push({ rowIndex, colIndex });
@@ -81,18 +81,18 @@ export default class Board {
   }
 
   openBoard() {
-    this.tiles.flat().forEach(cell => cell.action());
+    this.tiles.flat().forEach((cell) => cell.action());
   }
 
   normalizeBoard() {
     this.openBoard();
-    return this.tiles.map(row =>
-        row.map(cell => {
-          const normalizedCell = { ...cell };
-          delete normalizedCell.board;
-          normalizedCell.type = cell.constructor.name;
-          return normalizedCell;
-        })
-      )
+    return this.tiles.map((row) =>
+      row.map((cell) => {
+        const normalizedCell = { ...cell };
+        delete normalizedCell.board;
+        normalizedCell.type = cell.constructor.name;
+        return normalizedCell;
+      }),
+    );
   }
 }
