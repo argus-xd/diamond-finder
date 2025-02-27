@@ -9,8 +9,7 @@ export class GameGateway {
   server: Server;
   private readonly logger = new Logger(GameGateway.name);
 
-  constructor(private readonly gameService: GameService) {
-  }
+  constructor(private readonly gameService: GameService) {}
 
   @SubscribeMessage('makeMove')
   async handleMakeMove(

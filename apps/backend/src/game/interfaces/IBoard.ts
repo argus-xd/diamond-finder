@@ -1,6 +1,5 @@
 import { ICell } from './ICell';
 
-
 export interface IBoard {
   rows: number;
   cols: number;

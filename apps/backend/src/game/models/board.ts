@@ -11,17 +11,13 @@ interface Position {
 export default class Board implements IBoard {
   public tiles: ICell[][];
 
-  constructor(
-    public rows: number,
-    public cols: number,
-    public diamondsCount: number
-  ) {
+  constructor(public rows: number, public cols: number, public diamondsCount: number) {
     this.tiles = this.createBoard();
   }
 
   createBoard(): ICell[][] {
     const tiles = Array.from({ length: this.rows }, (_, x) =>
-      Array.from({ length: this.cols }, (_, y) => new MissCell(this, x, y))
+      Array.from({ length: this.cols }, (_, y) => new MissCell(this, x, y)),
     );
 
     return this.initializeDiamondCell(tiles);
@@ -54,16 +50,24 @@ export default class Board implements IBoard {
 
   neighborsTiles(x: number, y: number): string {
     const directions: [number, number][] = [
-      [0, 1], [0, -1], [1, 0], [-1, 0],
-      [1, 1], [1, -1], [-1, 1], [-1, -1]
+      [0, 1],
+      [0, -1],
+      [1, 0],
+      [-1, 0],
+      [1, 1],
+      [1, -1],
+      [-1, 1],
+      [-1, -1],
     ];
 
-    return directions.filter(([dx, dy]) => {
-      const newX = x + dx;
-      const newY = y + dy;
-      const tile = this.getTile(newX, newY);
-      return tile instanceof DiamondCell;
-    }).length.toString();
+    return directions
+      .filter(([dx, dy]) => {
+        const newX = x + dx;
+        const newY = y + dy;
+        const tile = this.getTile(newX, newY);
+        return tile instanceof DiamondCell;
+      })
+      .length.toString();
   }
 
   getTile(x: number, y: number): ICell | null {
@@ -75,19 +79,19 @@ export default class Board implements IBoard {
   }
 
   openBoard(): void {
-    this.tiles.flat().forEach(cell => cell.action());
+    this.tiles.flat().forEach((cell) => cell.action());
   }
 
   normalizeBoard(): Record<string, any>[] {
     this.openBoard();
-    return this.tiles.map(row =>
-      row.map(cell => {
+    return this.tiles.map((row) =>
+      row.map((cell) => {
         const normalizedCell = { ...cell };
         // @ts-ignore
         delete normalizedCell.board;
         normalizedCell.type = cell.constructor.name;
         return normalizedCell;
-      })
+      }),
     );
   }
 }
