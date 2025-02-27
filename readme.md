@@ -78,6 +78,7 @@ docker run --name postgres-game \
 
 # TODO
 
+- [ ] .env вернуть в .gitignore
 - [ ] Декомпозировать шаблон доски на компонеты Vue
 - [ ] Сделать ID комнат уникальными (localStorage.clear())
 - [ ] Закончить с Docker файлом для фронта

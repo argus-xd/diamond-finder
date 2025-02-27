@@ -39,9 +39,9 @@ export class GameGateway {
     this.server.to(sessionId.toString()).emit('gameUpdated', boardWithMoves);
     this.server.to(sessionId.toString()).emit('debug', 'debug gameUpdated makeMove ' + `${sessionId}`);
   }
- 
+
   @SubscribeMessage('joinGame')
-  async handleJoinGame(@MessageBody() data: { sessionId: number; token: any }, @ConnectedSocket() client: Socket) {
+  async handleJoinGame(@MessageBody() data: { sessionId: number; token: string }, @ConnectedSocket() client: Socket) {
     const { sessionId, token } = data;
     const gameSession = await this.gameService.getGameSession(sessionId, token);
 
