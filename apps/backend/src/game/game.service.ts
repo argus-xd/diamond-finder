@@ -100,22 +100,22 @@ export class GameService {
     });
 
     if (gameSession.cols * gameSession.rows <= moves.length) {
-      const crystalCounts: { [token: string]: number } = {};
+      const diamondsQuantity: { [token: string]: number } = {};
 
-      // Подсчет кристаллов для каждого игрока
+      // Подсчет алмазов для каждого игрока
       moves.forEach((move) => {
         if (move.isDiamond) {
-          if (!crystalCounts[move.playerToken]) {
-            crystalCounts[move.playerToken] = 0;
+          if (!diamondsQuantity[move.playerToken]) {
+            diamondsQuantity[move.playerToken] = 0;
           }
-          crystalCounts[move.playerToken]++;
+          diamondsQuantity[move.playerToken]++;
         }
       });
 
-      const playerTokens = Object.keys(crystalCounts);
+      const playerTokens = Object.keys(diamondsQuantity);
 
       const winnerToken =
-        crystalCounts[playerTokens[0]] > crystalCounts[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
+        diamondsQuantity[playerTokens[0]] > diamondsQuantity[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
 
       gameSession.status = GameStatus.FINISHED;
       gameSession.winnerToken = winnerToken;
