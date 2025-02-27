@@ -110,21 +110,16 @@ export class GameService {
   }
 
   private determineWinner(moves: GameMove[]): string {
-    const diamondsQuantity: { [token: string]: number } = {};
+    const playerPoints: { [token: string]: number } = moves
+      .filter((move: GameMove) => move.isDiamond)
+      .reduce((points: { [token: string]: number }, move: GameMove) => {
+        points[move.playerToken] = (points[move.playerToken] || 0) + 1;
+        return points;
+      }, {});
 
-    // Подсчет алмазов для каждого игрока
-    moves.forEach((move) => {
-      if (move.isDiamond) {
-        if (!diamondsQuantity[move.playerToken]) {
-          diamondsQuantity[move.playerToken] = 0;
-        }
-        diamondsQuantity[move.playerToken]++;
-      }
-    });
+    const [token1, token2]: string[] = Object.keys(playerPoints);
 
-    const playerTokens = Object.keys(diamondsQuantity);
-
-    return diamondsQuantity[playerTokens[0]] > diamondsQuantity[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
+    return playerPoints[token1] > (playerPoints[token2] || 0) ? token1 : token2;
   }
 
   async getBoardStateWithMoves(gameSession: GameSession): Promise<any[]> {
