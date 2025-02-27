@@ -87,11 +87,9 @@ export class GameService {
       // После выполнения хода переключаем очередь
       gameSession.isPlayerOneTurn = !gameSession.isPlayerOneTurn;
     }
-    await this.gameSessionRepository.save(gameSession);
-
     await this.finishGame(gameSession);
 
-    return gameSession;
+    return await this.gameSessionRepository.save(gameSession);;
   }
 
   async finishGame(gameSession: GameSession): Promise<GameSession> {
@@ -99,29 +97,33 @@ export class GameService {
       where: { session: { id: gameSession.id } },
     });
 
-    if (gameSession.cols * gameSession.rows <= moves.length) {
-      const diamondsQuantity: { [token: string]: number } = {};
+    const isGameFinished = gameSession.cols * gameSession.rows <= moves.length;
 
-      // Подсчет алмазов для каждого игрока
-      moves.forEach((move) => {
-        if (move.isDiamond) {
-          if (!diamondsQuantity[move.playerToken]) {
-            diamondsQuantity[move.playerToken] = 0;
-          }
-          diamondsQuantity[move.playerToken]++;
-        }
-      });
-
-      const playerTokens = Object.keys(diamondsQuantity);
-
-      const winnerToken =
-        diamondsQuantity[playerTokens[0]] > diamondsQuantity[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
-
-      gameSession.status = GameStatus.FINISHED;
-      gameSession.winnerToken = winnerToken;
+    if (!isGameFinished) {
+      return gameSession;
     }
 
-    return this.gameSessionRepository.save(gameSession);
+    const diamondsQuantity: { [token: string]: number } = {};
+
+    // Подсчет алмазов для каждого игрока
+    moves.forEach((move) => {
+      if (move.isDiamond) {
+        if (!diamondsQuantity[move.playerToken]) {
+          diamondsQuantity[move.playerToken] = 0;
+        }
+        diamondsQuantity[move.playerToken]++;
+      }
+    });
+
+    const playerTokens = Object.keys(diamondsQuantity);
+
+    const winnerToken =
+      diamondsQuantity[playerTokens[0]] > diamondsQuantity[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
+
+    gameSession.status = GameStatus.FINISHED;
+    gameSession.winnerToken = winnerToken;
+
+    return gameSession;
   }
 
   async getBoardStateWithMoves(gameSession: GameSession): Promise<any[]> {
