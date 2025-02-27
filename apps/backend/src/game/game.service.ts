@@ -87,12 +87,12 @@ export class GameService {
       // После выполнения хода переключаем очередь
       gameSession.isPlayerOneTurn = !gameSession.isPlayerOneTurn;
     }
-    await this.finishGame(gameSession);
+    await this.finishTurn(gameSession);
 
-    return await this.gameSessionRepository.save(gameSession);;
+    return this.gameSessionRepository.save(gameSession);;
   }
 
-  async finishGame(gameSession: GameSession): Promise<GameSession> {
+  async finishTurn(gameSession: GameSession): Promise<GameSession> {
     const moves = await this.gameMoveRepository.find({
       where: { session: { id: gameSession.id } },
     });
@@ -103,6 +103,13 @@ export class GameService {
       return gameSession;
     }
 
+    gameSession.status = GameStatus.FINISHED;
+    gameSession.winnerToken = this.determineWinner(moves);
+
+    return gameSession;
+  }
+
+  private determineWinner(moves: GameMove[]): string {
     const diamondsQuantity: { [token: string]: number } = {};
 
     // Подсчет алмазов для каждого игрока
@@ -117,13 +124,7 @@ export class GameService {
 
     const playerTokens = Object.keys(diamondsQuantity);
 
-    const winnerToken =
-      diamondsQuantity[playerTokens[0]] > diamondsQuantity[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
-
-    gameSession.status = GameStatus.FINISHED;
-    gameSession.winnerToken = winnerToken;
-
-    return gameSession;
+    return diamondsQuantity[playerTokens[0]] > diamondsQuantity[playerTokens[1]] ? playerTokens[0] : playerTokens[1];
   }
 
   async getBoardStateWithMoves(gameSession: GameSession): Promise<any[]> {
