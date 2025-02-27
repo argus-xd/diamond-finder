@@ -44,9 +44,8 @@ export class GameService {
     // Регистрируем второго игрока
     gameSession.playerTwoToken = uuidv4();
     gameSession.status = GameStatus.IN_PROGRESS;
-    await this.gameSessionRepository.save(gameSession);
 
-    return gameSession;
+    return this.gameSessionRepository.save(gameSession);
   }
 
   async getGameSession(sessionId: number, token: string): Promise<GameSession> {
