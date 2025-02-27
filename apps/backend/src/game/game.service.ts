@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { GameSession, GameStatus } from '../entities/GameSession';
-import Board from './entity/Board';
 import { GameMove } from '../entities/GameMove';
+import Board from './models/board';
 
 @Injectable()
 export class GameService {
