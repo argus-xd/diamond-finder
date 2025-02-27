@@ -17,18 +17,13 @@ export class GameGateway {
     @ConnectedSocket() client: Socket,
   ) {
     const { sessionId, x, y, token } = data;
-    const gameSession = await this.gameService.getGameSession(sessionId, token);
-
-    const board = gameSession.boardState;
-    const tile = board[x][y];
-    this.logger.log('handleMakeMove', tile);
 
     const gameSessionAfterMovies = await this.gameService.makeMove(sessionId, token, x, y);
 
     const boardWithMoves = {
-      tiles: await this.gameService.getBoardStateWithMoves(sessionId, token),
-      cols: gameSession.cols,
-      rows: gameSession.rows,
+      tiles: await this.gameService.getBoardStateWithMoves(gameSessionAfterMovies),
+      cols: gameSessionAfterMovies.cols,
+      rows: gameSessionAfterMovies.rows,
       winnerToken: gameSessionAfterMovies.winnerToken,
       status: gameSessionAfterMovies.status,
       isPlayerOneTurn: gameSessionAfterMovies.isPlayerOneTurn,
@@ -47,7 +42,7 @@ export class GameGateway {
     client.join(sessionId.toString());
 
     const boardWithMoves = {
-      tiles: await this.gameService.getBoardStateWithMoves(sessionId, token),
+      tiles: await this.gameService.getBoardStateWithMoves(gameSession),
       cols: gameSession.cols,
       rows: gameSession.rows,
       status: gameSession.status,

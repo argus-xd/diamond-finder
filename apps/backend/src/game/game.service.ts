@@ -68,7 +68,7 @@ export class GameService {
 
     const isPlayerOne = gameSession.playerOneToken === token;
     if (gameSession.isPlayerOneTurn !== isPlayerOne) {
-      throw new Error('Not your turn!');
+      return gameSession;
     }
 
     const tile = gameSession.boardState[x][y];
@@ -125,8 +125,7 @@ export class GameService {
     return this.gameSessionRepository.save(gameSession);
   }
 
-  async getBoardStateWithMoves(sessionId: number, token: string) {
-    const gameSession = await this.getGameSession(sessionId, token);
+  async getBoardStateWithMoves(gameSession: GameSession): Promise<any[]> {
     const moves = await this.gameMoveRepository.find({
       where: { session: { id: gameSession.id } }, // Используйте только ID сессии
       order: { createdAt: 'ASC' },
