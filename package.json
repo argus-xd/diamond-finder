@@ -4,7 +4,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "yarn workspace backend run test",
     "build:backend": "yarn workspace backend build",
     "start:backend": "yarn workspace backend start:dev",
     "start:frontend": "yarn workspace frontend serve",
