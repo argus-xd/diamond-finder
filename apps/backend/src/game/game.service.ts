@@ -2,9 +2,10 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { GameSession, GameStatus } from '../entities/GameSession';
-import { GameMove } from '../entities/GameMove';
+import { GameSession } from '../entities/game-session.entity';
+import { GameMove } from '../entities/game-move.entity';
 import Board from './models/board';
+import { GameStatus } from '../enum/game-status';
 
 @Injectable()
 export class GameService {

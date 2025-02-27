@@ -1,10 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-
-export enum GameStatus {
-  WAITING = 'waiting',
-  IN_PROGRESS = 'in_progress',
-  FINISHED = 'finished',
-}
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { GameStatus } from '../enum/game-status';
 
 @Entity()
 export class GameSession {

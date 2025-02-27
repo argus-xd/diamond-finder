@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Unique } from 'typeorm';
-import { GameSession } from './GameSession';
+import { GameSession } from './game-session.entity';
 
 @Entity()
 @Unique(['session', 'row', 'col']) // Уникальный индекс для комбинации session, row и col

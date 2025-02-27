@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { GameModule } from './game/game.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GameSession } from './entities/GameSession';
-import { GameMove } from './entities/GameMove';
+import { GameSession } from './entities/game-session.entity';
+import { GameMove } from './entities/game-move.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
