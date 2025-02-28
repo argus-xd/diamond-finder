@@ -2,6 +2,7 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSo
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
 import { Logger } from '@nestjs/common';
+import { GameSession } from '../entities/game-session.entity';
 
 @WebSocketGateway({ cors: true })
 export class GameGateway {
@@ -11,47 +12,37 @@ export class GameGateway {
 
   constructor(private readonly gameService: GameService) {}
 
+  private async emitGameState(gameSession:GameSession) {
+    const boardWithMoves = {
+      tiles: await this.gameService.getBoardStateWithMoves(gameSession),
+      cols: gameSession.cols,
+      rows: gameSession.rows,
+      winnerToken: gameSession.winnerToken,
+      status: gameSession.status,
+      isPlayerOneTurn: gameSession.isPlayerOneTurn,
+    };
+
+    this.server.to(gameSession.id.toString()).emit('gameUpdated', boardWithMoves);
+  }
+
   @SubscribeMessage('makeMove')
   async handleMakeMove(
     @MessageBody() data: { sessionId: number; token: string; x: number; y: number },
     @ConnectedSocket() client: Socket,
   ) {
-    const { sessionId, x, y, token } = data;
+    const { sessionId, token, x, y } = data;
 
     const gameSessionAfterMoves = await this.gameService.makeMove(sessionId, token, x, y);
-
-    const boardWithMoves = {
-      tiles: await this.gameService.getBoardStateWithMoves(gameSessionAfterMoves),
-      cols: gameSessionAfterMoves.cols,
-      rows: gameSessionAfterMoves.rows,
-      winnerToken: gameSessionAfterMoves.winnerToken,
-      status: gameSessionAfterMoves.status,
-      isPlayerOneTurn: gameSessionAfterMoves.isPlayerOneTurn,
-    };
-
-    // Отправка обновленного состояния игры обоим игрокам
-    this.server.to(sessionId.toString()).emit('gameUpdated', boardWithMoves);
-    this.server.to(sessionId.toString()).emit('debug', 'debug gameUpdated makeMove ' + `${sessionId}`);
+    await this.emitGameState(gameSessionAfterMoves);
+    this.logger.debug(`Game updated after move in session ${sessionId}`);
   }
 
   @SubscribeMessage('joinGame')
   async handleJoinGame(@MessageBody() data: { sessionId: number; token: string }, @ConnectedSocket() client: Socket) {
     const { sessionId, token } = data;
-    const gameSession = await this.gameService.getGameSession(sessionId, token);
-
+    const session = await this.gameService.getGameSession(sessionId, token);
     client.join(sessionId.toString());
-
-    const boardWithMoves = {
-      tiles: await this.gameService.getBoardStateWithMoves(gameSession),
-      cols: gameSession.cols,
-      rows: gameSession.rows,
-      status: gameSession.status,
-      winnerToken: gameSession.winnerToken,
-      isPlayerOneTurn: gameSession.isPlayerOneTurn,
-    };
-
-    // Отправка обновленного состояния игры обоим игрокам
-    this.server.to(gameSession.id.toString()).emit('gameUpdated', boardWithMoves);
+    await this.emitGameState(session);
   }
 
   @SubscribeMessage('tryJoinGame')

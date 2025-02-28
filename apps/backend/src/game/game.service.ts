@@ -34,11 +34,7 @@ export class GameService {
 
   // Присоединение второго игрока к сессии
   async joinGameSession(sessionId: number): Promise<GameSession> {
-    const gameSession = await this.gameSessionRepository.findOne({
-      where: { id: sessionId },
-    });
-
-    if (!gameSession) throw new NotFoundException('Game session not found');
+    const gameSession = await this.findGameSession(sessionId);
     if (gameSession.playerTwoToken) throw new UnauthorizedException('Game already full');
 
     // Регистрируем второго игрока
@@ -49,21 +45,27 @@ export class GameService {
   }
 
   async getGameSession(sessionId: number, token: string): Promise<GameSession> {
+    const gameSession = await this.findGameSession(sessionId);
+    this.validatePlayerToken(gameSession, token);
+    return gameSession;
+  }
+
+  private async findGameSession(sessionId: number): Promise<GameSession> {
     const gameSession = await this.gameSessionRepository.findOne({ where: { id: sessionId } });
     if (!gameSession) throw new NotFoundException('Game session not found');
-    if (gameSession.playerOneToken !== token && gameSession.playerTwoToken !== token)
-      throw new UnauthorizedException('Invalid player token');
-
     return gameSession;
+  }
+
+  private validatePlayerToken(gameSession: GameSession, token: string): void {
+    if (gameSession.playerOneToken !== token && gameSession.playerTwoToken !== token) {
+      throw new UnauthorizedException('Invalid player token');
+    }
   }
 
   async makeMove(sessionId: number, token: string, x: number, y: number): Promise<GameSession> {
     const gameSession = await this.getGameSession(sessionId, token);
+    
     if (gameSession.status !== GameStatus.IN_PROGRESS) return gameSession;
-
-    if (![gameSession.playerOneToken, gameSession.playerTwoToken].includes(token)) {
-      throw new UnauthorizedException('Invalid player token');
-    }
 
     const isPlayerOne = gameSession.playerOneToken === token;
     if (gameSession.isPlayerOneTurn !== isPlayerOne) {
